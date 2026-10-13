@@ -1,0 +1,37 @@
+[package]
+name = "llama-dbusd"
+version = "0.1.0"
+edition = "2021"
+authors = ["token419"]
+license = "MIT"
+description = "An ultra-lightweight, asynchronous Rust D-Bus daemon for local llama.cpp orchestration."
+repository = "https://github.com/token419/llama-dbusd"
+readme = "README.md"
+keywords = ["dbus", "llama.cpp", "llm", "daemon", "rust"]
+categories = ["asynchronous", "os::linux-apis"]
+
+
+[dependencies]
+# Async runtime for handling non-blocking network/D-Bus tasks
+tokio = { version = "1.0", features = ["full"] }
+
+# HTTP Client to talk to llama-server
+reqwest = { version = "0.13", features = ["json"] }
+
+# JSON Serialization/Deserialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Modern, async-friendly D-Bus library
+zbus = "5"
+
+# Structured, async-aware logging framework
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+[profile.release]
+opt-level = "z"     # Optimize strictly for minimal binary size
+lto = true          # Enable Link-Time Optimization globally across crates
+codegen-units = 1   # Reduce parallel compilation blocks to maximize size reduction
+panic = "abort"     # Strip heavy stack-unwinding code on panic events
+strip = true        # Completely remove all remaining symbols and debug tables

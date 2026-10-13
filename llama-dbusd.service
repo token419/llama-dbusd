@@ -1,0 +1,14 @@
+[Unit]
+Description=Rust D-Bus Wrapper for llama.cpp Orchestration
+# Ensure it boots up after the user session network layer is ready
+After=network.target
+
+[Service]
+Type=exec
+# Point this directly to your compiled debug binary for now
+ExecStart=%h/.local/bin/llama-dbusd
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target

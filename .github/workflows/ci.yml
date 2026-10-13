@@ -1,0 +1,156 @@
+name: CI
+
+'on':
+  push:
+    branches:
+      - master
+      - main
+    tags:
+      - 'v*'
+  pull_request:
+    branches:
+      - master
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  lint-and-test:
+    name: Lint & Test (Gatekeeper)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libdbus-1-dev dbus
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+
+      - name: Cache Rust dependencies and build artifacts
+        uses: Swatinem/rust-cache@v2
+
+      - name: Check code formatting
+        run: cargo fmt --check
+
+      - name: Lint with Clippy
+        run: cargo clippy --all-targets -- -D warnings
+
+      - name: Run test suite
+        run: cargo test --verbose
+
+  cross-compile:
+    name: Cross-Compilation (${{ matrix.target }})
+    needs: lint-and-test
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - x86_64-unknown-linux-gnu
+          - aarch64-unknown-linux-gnu
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cross binary
+        uses: actions/cache@v6
+        with:
+          path: ~/.cargo/bin/cross
+          key: ${{ runner.os }}-cross-bin
+
+      - name: Install cross via cargo
+        run: |
+          if ! command -v cross &> /dev/null; then
+            cargo install cross
+          fi
+
+      - name: Cache cargo target
+        uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.target }}
+
+      - name: Build release binary with cross
+        run: cross build --target ${{ matrix.target }} --release
+
+      - name: Upload compiled binary artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: llama-dbusd-${{ matrix.target }}
+          path: target/${{ matrix.target }}/release/llama-dbusd
+          if-no-files-found: error
+          retention-days: 1
+
+  release:
+    name: GitHub Release
+    needs: cross-compile
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Download all compiled binaries
+        uses: actions/download-artifact@v8
+        with:
+          path: artifacts
+
+      - name: Package release asset bundles
+        run: |
+          set -euo pipefail
+
+          TAG="${{ github.ref_name }}"
+          mkdir -p release-assets
+
+          for TARGET in x86_64-unknown-linux-gnu aarch64-unknown-linux-gnu; do
+            STAGE_DIR="llama-dbusd-$TAG-$TARGET"
+            mkdir -p "$STAGE_DIR"
+
+            cp "artifacts/llama-dbusd-$TARGET/llama-dbusd" "$STAGE_DIR/llama-dbusd"
+            chmod +x "$STAGE_DIR/llama-dbusd"
+
+            for FILE in README.md LICENSE llama-dbusd.service; do
+              if [ -f "$FILE" ]; then
+                cp "$FILE" "$STAGE_DIR/$FILE"
+              elif [ -f "llama-dbusd/$FILE" ]; then
+                cp "llama-dbusd/$FILE" "$STAGE_DIR/$FILE"
+              fi
+            done
+
+            ARCHIVE_NAME="llama-dbusd-$TAG-$TARGET.tar.gz"
+            tar -czvf "release-assets/$ARCHIVE_NAME" -C "$STAGE_DIR" .
+          done
+
+          cd release-assets
+          sha256sum llama-dbusd-*.tar.gz > SHA256SUMS.txt
+          ls -lh
+          cd ..
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          draft: false
+          fail_on_unmatched_files: true
+          generate_release_notes: true
+          files: |
+            release-assets/*.tar.gz
+            release-assets/SHA256SUMS.txt
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

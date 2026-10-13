@@ -6,7 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![CI Matrix](https://img.shields.io/badge/targets-x86__64%20%7C%20aarch64-brightgreen.svg)](#target-architecture-matrix)
 
-**`llama-dbusd`** is an ultra-lightweight, high-performance asynchronous system daemon written in Rust. It serves as a native IPC bridge exposing standard Session D-Bus (`com.github.token419.LlamaDbusd`) methods, properties, and signals to connect Linux desktop UI environments—such as GNOME Shell extensions, status bars, and desktop widgets—with local [`llama.cpp`](https://github.com/ggerganov/llama.cpp) inference servers (`llama-server`).
+**`llama-dbusd`** is an ultra-lightweight, high-performance asynchronous system daemon written in Rust. It serves as a native IPC bridge exposing standard Session D-Bus (`com.github.token419.LlamaDbusd`) methods, properties, and signals to connect Linux desktop UI environments—such as GNOME Shell extensions, status bars, and desktop widgets—with local [`llama.cpp`](https://github.com/ggml-org/llama.cpp) inference servers (`llama-server`).
 
 ---
 

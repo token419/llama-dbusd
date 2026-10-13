@@ -8,7 +8,7 @@ pkgbase = llama-dbusd
 	license = MIT
 	makedepends = cargo
 	depends = dbus
-	source = llama-dbusd-0.1.0.tar.gz::https://github.com/token419/llama-dbusd/archive/v1.0.0.tar.gz
-	sha256sums = SKIP
+	source = llama-dbusd-0.1.0.tar.gz::https://github.com/token419/llama-dbusd/archive/v0.1.0.tar.gz
+	sha256sums = 63930b472b661dba623a033c32e78eb555e00b73e92e1e1d061d62c93376b5dc
 
 pkgname = llama-dbusd

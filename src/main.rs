@@ -5,9 +5,10 @@ use tokio::sync::{mpsc, RwLock};
 use zbus::object_server::SignalEmitter;
 use zbus::{connection, interface};
 
+mod cli;
+
 const BUS_NAME: &str = "com.github.token419.LlamaDbusd";
 const OBJECT_PATH: &str = "/";
-const DEFAULT_SERVER_URL: &str = "http://127.0.0.1:8080";
 const POLL_INTERVAL_MS: u64 = 1000;
 const HTTP_TIMEOUT_SECS: u64 = 30;
 
@@ -280,6 +281,22 @@ fn parse_models_json(json_val: &serde_json::Value) -> (Vec<String>, Vec<String>)
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
+    let action = match cli::parse_args(std::env::args().skip(1)) {
+        Ok(action) => action,
+        Err(err) => {
+            eprintln!("{err}");
+            std::process::exit(2);
+        }
+    };
+
+    let cli_config = match action {
+        cli::CliAction::Help => {
+            print!("{}", cli::help_message());
+            std::process::exit(0);
+        }
+        cli::CliAction::Run(config) => config,
+    };
+
     tracing_subscriber::fmt()
         .with_env_filter(
             tracing_subscriber::EnvFilter::try_from_default_env()
@@ -289,8 +306,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     tracing::info!("Starting llama-dbusd daemon...");
 
-    let server_url =
-        std::env::var("LLAMA_SERVER_URL").unwrap_or_else(|_| DEFAULT_SERVER_URL.to_string());
+    let server_url = cli_config.server_url;
 
     let state = Arc::new(RwLock::new(DaemonState::default()));
     let (sync_tx, mut sync_rx) = mpsc::channel::<()>(16);

@@ -29,6 +29,7 @@
   - [Target Architecture Matrix](#target-architecture-matrix)
   - [Binary Size & Release Profile Optimizations](#binary-size--release-profile-optimizations)
   - [Local Installation & Systemd Service](#local-installation--systemd-service)
+  - [Command-Line Options](#command-line-options)
   - [Environment Configuration](#environment-configuration)
   - [Manual D-Bus Inspection with `busctl`](#manual-d-bus-inspection-with-busctl)
 - [AI Assistance Attestation](#ai-assistance-attestation)
@@ -241,6 +242,27 @@ strip = true        # Strip all symbols, debug tables, and section names from th
    systemctl --user status llama-dbusd.service
    journalctl --user -u llama-dbusd.service -f
    ```
+
+### Command-Line Options
+
+`llama-dbusd` provides POSIX-compliant argument parsing:
+
+```text
+Usage: llama-dbusd [OPTIONS]
+
+An ultra-lightweight, asynchronous Rust D-Bus daemon for local llama.cpp orchestration.
+
+Options:
+  -u, --url <URL>    llama-server base URL [default: http://127.0.0.1:8080] [env: LLAMA_SERVER_URL]
+  -h, --help         Print help information
+```
+
+| Flag | Long Flag | Description | Default |
+| :--- | :--- | :--- | :--- |
+| `-u <URL>` | `--url <URL>` | llama-server base URL (overrides `LLAMA_SERVER_URL`) | `http://127.0.0.1:8080` |
+| `-h` | `--help` | Print help information and exit | |
+
+Flag syntax supports standard POSIX and GNU conventions (e.g. `-u http://127.0.0.1:8080`, `-uhttp://127.0.0.1:8080`, `--url=http://127.0.0.1:8080`, bundled `-hu`, and `--` option delimiter).
 
 ### Environment Configuration
 

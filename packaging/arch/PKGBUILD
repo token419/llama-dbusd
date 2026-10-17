@@ -1,6 +1,6 @@
 # Maintainer: token419 <https://github.com/token419>
 pkgname=llama-dbusd
-pkgver=0.1.0
+pkgver=0.1.1
 pkgrel=1
 pkgdesc="Rust D-Bus daemon for llama.cpp orchestration"
 arch=('x86_64' 'aarch64')
@@ -9,7 +9,7 @@ license=('MIT')
 depends=('dbus')
 makedepends=('cargo')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-sha256sums=('63930b472b661dba623a033c32e78eb555e00b73e92e1e1d061d62c93376b5dc')
+sha256sums=('e9cad876e23f29a4cd6b727c8553db7afbad3375a9e9c378227c673667c03035')
 
 prepare() {
   cd "$pkgname-$pkgver"

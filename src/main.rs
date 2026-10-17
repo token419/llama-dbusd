@@ -49,6 +49,11 @@ struct LlamaDbusd {
 impl LlamaDbusd {
     // --- PROPERTIES ---
 
+    #[zbus(property, name = "ServerUrl")]
+    async fn server_url(&self) -> String {
+        self.server_url.clone()
+    }
+
     #[zbus(property, name = "IsOnline")]
     async fn is_online(&self) -> bool {
         self.state.read().await.is_online

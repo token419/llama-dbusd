@@ -115,6 +115,11 @@ pub struct MockLlamaDbusd {
 impl MockLlamaDbusd {
     // --- PROPERTIES ---
 
+    #[zbus(property, name = "ServerUrl")]
+    async fn server_url(&self) -> String {
+        "http://127.0.0.1:8080".to_string()
+    }
+
     #[zbus(property, name = "IsOnline")]
     async fn is_online(&self) -> bool {
         self.state.read().await.is_online
@@ -213,6 +218,9 @@ impl MockLlamaDbusd {
 pub trait LlamaDbusd {
     fn load_model(&self, model: &str) -> zbus::Result<bool>;
     fn unload_model(&self, model: &str) -> zbus::Result<bool>;
+
+    #[zbus(property)]
+    fn server_url(&self) -> zbus::Result<String>;
 
     #[zbus(property)]
     fn is_online(&self) -> zbus::Result<bool>;
@@ -610,4 +618,18 @@ async fn test_signal_models_changed() {
         Some(INTERFACE_NAME),
         "Signal interface must match com.github.token419.LlamaDbusd"
     );
+}
+
+#[tokio::test]
+async fn test_property_server_url() {
+    let harness = TestHarness::new()
+        .await
+        .expect("Failed to initialize test harness");
+
+    let url = harness
+        .proxy
+        .server_url()
+        .await
+        .expect("Failed to read ServerUrl property");
+    assert_eq!(url, "http://127.0.0.1:8080");
 }

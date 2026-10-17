@@ -108,6 +108,7 @@ Logging is orchestrated through the asynchronous [`tracing`](https://docs.rs/tra
 
 | Property Name | Type Signature | Access | Description |
 | :--- | :--- | :--- | :--- |
+| `ServerUrl` | `s` (string) | Read | The active `llama-server` base HTTP address configured for daemon polling and orchestration. |
 | `IsOnline` | `b` (boolean) | Read | Indicates whether the backing `llama-server` HTTP instance is reachable and responding with HTTP 200 OK. |
 | `AvailableModels` | `as` (array of strings) | Read | List of all model identifiers discovered and advertised by the inference server. |
 | `LoadedModels` | `as` (array of strings) | Read | List of model identifiers currently resident in GPU/system memory (`status.value == "loaded"`). |

@@ -117,7 +117,7 @@ impl MockLlamaDbusd {
 
     #[zbus(property, name = "ServerUrl")]
     async fn server_url(&self) -> String {
-        "http://127.0.0.1:8080".to_string()
+        "http://127.0.0.1:9931".to_string()
     }
 
     #[zbus(property, name = "IsOnline")]
@@ -631,5 +631,5 @@ async fn test_property_server_url() {
         .server_url()
         .await
         .expect("Failed to read ServerUrl property");
-    assert_eq!(url, "http://127.0.0.1:8080");
+    assert_eq!(url, "http://127.0.0.1:9931");
 }

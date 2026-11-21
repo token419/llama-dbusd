@@ -1,4 +1,4 @@
-pub const DEFAULT_SERVER_URL: &str = "http://127.0.0.1:8080";
+pub const DEFAULT_SERVER_URL: &str = "http://127.0.0.1:9931";
 pub const ENV_URL: &str = "LLAMA_SERVER_URL";
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -331,7 +331,7 @@ mod tests {
         assert!(msg.contains("Usage: llama-dbusd [OPTIONS]"));
         assert!(msg.contains("-u, --url <URL>"));
         assert!(msg.contains("-h, --help"));
-        assert!(msg.contains("http://127.0.0.1:8080"));
+        assert!(msg.contains("http://127.0.0.1:9931"));
         assert!(msg.contains("LLAMA_SERVER_URL"));
     }
 }

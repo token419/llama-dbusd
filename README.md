@@ -253,16 +253,16 @@ Usage: llama-dbusd [OPTIONS]
 An ultra-lightweight, asynchronous Rust D-Bus daemon for local llama.cpp orchestration.
 
 Options:
-  -u, --url <URL>    llama-server base URL [default: http://127.0.0.1:8080] [env: LLAMA_SERVER_URL]
+  -u, --url <URL>    llama-server base URL [default: http://127.0.0.1:9931] [env: LLAMA_SERVER_URL]
   -h, --help         Print help information
 ```
 
 | Flag | Long Flag | Description | Default |
 | :--- | :--- | :--- | :--- |
-| `-u <URL>` | `--url <URL>` | llama-server base URL (overrides `LLAMA_SERVER_URL`) | `http://127.0.0.1:8080` |
+| `-u <URL>` | `--url <URL>` | llama-server base URL (overrides `LLAMA_SERVER_URL`) | `http://127.0.0.1:9931` |
 | `-h` | `--help` | Print help information and exit | |
 
-Flag syntax supports standard POSIX and GNU conventions (e.g. `-u http://127.0.0.1:8080`, `-uhttp://127.0.0.1:8080`, `--url=http://127.0.0.1:8080`, bundled `-hu`, and `--` option delimiter).
+Flag syntax supports standard POSIX and GNU conventions (e.g. `-u http://127.0.0.1:9931`, `-uhttp://127.0.0.1:9931`, `--url=http://127.0.0.1:9931`, bundled `-hu`, and `--` option delimiter).
 
 ### Environment Configuration
 
@@ -270,7 +270,7 @@ The daemon supports configuration via environment variables:
 
 | Variable | Default Value | Description |
 | :--- | :--- | :--- |
-| `LLAMA_SERVER_URL` | `http://127.0.0.1:8080` | Base URL of the running `llama-server` instance. |
+| `LLAMA_SERVER_URL` | `http://127.0.0.1:9931` | Base URL of the running `llama-server` instance. |
 | `RUST_LOG` | `info` | Logging verbosity filter (e.g., `debug`, `llama_dbusd=trace`, `warn`). |
 
 To override these parameters in systemd, create a drop-in override:
@@ -283,7 +283,7 @@ Add the desired environment settings:
 
 ```ini
 [Service]
-Environment="LLAMA_SERVER_URL=http://127.0.0.1:8080"
+Environment="LLAMA_SERVER_URL=http://127.0.0.1:9931"
 Environment="RUST_LOG=info,llama_dbusd=debug"
 ```
 

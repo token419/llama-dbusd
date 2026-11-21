@@ -1,6 +1,6 @@
 pkgbase = llama-dbusd
 	pkgdesc = Rust D-Bus daemon for llama.cpp orchestration
-	pkgver = 0.1.3
+	pkgver = 0.1.4
 	pkgrel = 1
 	url = https://github.com/token419/llama-dbusd
 	arch = x86_64
@@ -8,7 +8,7 @@ pkgbase = llama-dbusd
 	license = MIT
 	makedepends = cargo
 	depends = dbus
-	source = llama-dbusd-0.1.3.tar.gz::https://github.com/token419/llama-dbusd/archive/v0.1.3.tar.gz
-	sha256sums = 77690bd51bbdc2ff887d0767d615cd72e1199c644b87f9c7f3b6b5c862c4f0c4
+	source = llama-dbusd-0.1.4.tar.gz::https://github.com/token419/llama-dbusd/archive/v0.1.4.tar.gz
+	sha256sums = 8dd726fdc97492e51d951c321575e6af70b12f3e6a4ca4c6f47a1862328afd90
 
 pkgname = llama-dbusd

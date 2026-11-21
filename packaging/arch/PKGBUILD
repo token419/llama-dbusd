@@ -9,7 +9,7 @@ license=('MIT')
 depends=('dbus')
 makedepends=('cargo')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-sha256sums=('77690bd51bbdc2ff887d0767d615cd72e1199c644b87f9c7f3b6b5c862c4f0c4')
+sha256sums=('8dd726fdc97492e51d951c321575e6af70b12f3e6a4ca4c6f47a1862328afd90')
 
 prepare() {
   cd "$pkgname-$pkgver"
